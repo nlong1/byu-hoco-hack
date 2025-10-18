@@ -9,6 +9,24 @@ class ModuleService:
         return response.data
 
     @staticmethod
+    def get_all_modules_with_lessons():
+        db = get_db()
+        modules_response = db.table("modules").select("*").execute()
+        modules = modules_response.data
+
+        for module in modules:
+            lessons_response = (
+                db.table("lessons")
+                .select("lesson_id, lesson_name")
+                .eq("module_id", module["module_id"])
+                .order("order_num")
+                .execute()
+            )
+            module["lessons"] = lessons_response.data
+
+        return modules
+
+    @staticmethod
     def get_lessons_by_module(module_id: int):
         db = get_db()
         response = (

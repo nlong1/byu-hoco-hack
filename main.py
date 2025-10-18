@@ -36,6 +36,21 @@ def get_modules():
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.get("/modules/with-lessons")
+def get_modules_with_lessons():
+    """
+    Get all modules with their associated lessons (lesson_id and lesson_name only).
+
+    Returns:
+        JSON response with array of modules, each containing a lessons array
+    """
+    try:
+        modules = ModuleService.get_all_modules_with_lessons()
+        return {"modules": modules}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.get("/modules/{module_id}/lessons")
 def get_lessons(module_id: int):
     """
